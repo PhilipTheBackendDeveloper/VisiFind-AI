@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In | Clarifai</title>
+    <link rel="shortcut icon" href="https://www.clarifai.com/hubfs/logo/Clarifai/Clarifai%20Computer%20Vision%20Icon.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="auth-image">
+                <img src="login-signup.jpeg" alt="Clarifai AI Platform" class="main-image">
+                <div class="gradient-overlay"></div>
+                <div class="image-content">
+                    <div class="brand-logo">
+                        <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Clarifai Logo">
+                    </div>
+                    <div class="typewriter-container">
+                        <h2>The <span class="highlight">AI Lifecycle Platform</span> for</h2>
+                        <div class="typewriter" id="typewriter"></div>
+                    </div>
+                    <div class="testimonial">
+                        <blockquote>
+                            "Clarifai has transformed how we build and deploy AI models, cutting our development time in half."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <img src="https://www.clarifai.com/hubfs/Canva.svg" alt="Canva" class="company-logo">
+                            <div class="author-info">
+                                <span class="author-name">Michael Chen</span>
+                                <span class="author-title">AI Lead at Canva</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-content">
+                <div class="auth-header">
+                    <h1>Welcome back</h1>
+                    <p class="auth-subtitle">Log in to your Clarifai account</p>
+                </div>
+                
+                <div class="auth-options">
+                    <button class="auth-option-btn google">
+                        <img src="google-icon.png" alt="Google">
+                        <span>Continue with Google</span>
+                    </button>
+                    <button class="auth-option-btn github">
+                        <img src="github-icon.png" alt="GitHub">
+                        <span>Continue with GitHub</span>
+                    </button>
+                </div>
+                
+                <div class="auth-divider">
+                    <span>or log in with email</span>
+                </div>
+                
+                <form id="login-form" class="auth-form" action="home.html">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="auth-submit-btn">Log In</button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+                    <div class="trust-badges">
+                        <div class="badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span>SOC 2 Compliant</span>
+                        </div>
+                        <div class="badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            <span>Enterprise Security</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="typewriter.js"></script>
+    <script src="navigation.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
+
