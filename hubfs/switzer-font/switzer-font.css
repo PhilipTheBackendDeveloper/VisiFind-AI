@@ -1,0 +1,80 @@
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Thin.eot');
+    src: url('Switzer-Thin.eot?#iefix') format('embedded-opentype'), url('Switzer-Thin.woff2') format('woff2'), url('Switzer-Thin.woff') format('woff'), url('Switzer-Thin.ttf') format('truetype'), url('Switzer-Thin.svg#Switzer-Thin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Extralight.eot');
+    src: url('Switzer-Extralight.eot?#iefix') format('embedded-opentype'), url('Switzer-Extralight.woff2') format('woff2'), url('Switzer-Extralight.woff') format('woff'), url('Switzer-Extralight.ttf') format('truetype'), url('Switzer-Extralight.svg#Switzer-Extralight') format('svg');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Light.eot');
+    src: url('Switzer-Light.eot?#iefix') format('embedded-opentype'), url('Switzer-Light.woff2') format('woff2'), url('Switzer-Light.woff') format('woff'), url('Switzer-Light.ttf') format('truetype'), url('Switzer-Light.svg#Switzer-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Regular.eot');
+    src: url('Switzer-Regular.eot?#iefix') format('embedded-opentype'), url('Switzer-Regular.woff2') format('woff2'), url('Switzer-Regular.woff') format('woff'), url('Switzer-Regular.ttf') format('truetype'), url('Switzer-Regular.svg#Switzer-Regular') format('svg');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Medium.eot');
+    src: url('Switzer-Medium.eot?#iefix') format('embedded-opentype'), url('Switzer-Medium.woff2') format('woff2'), url('Switzer-Medium.woff') format('woff'), url('Switzer-Medium.ttf') format('truetype'), url('Switzer-Medium.svg#Switzer-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Semibold.eot');
+    src: url('Switzer-Semibold.eot?#iefix') format('embedded-opentype'), url('Switzer-Semibold.woff2') format('woff2'), url('Switzer-Semibold.woff') format('woff'), url('Switzer-Semibold.ttf') format('truetype'), url('Switzer-Semibold.svg#Switzer-Semibold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Bold.eot');
+    src: url('Switzer-Bold.eot?#iefix') format('embedded-opentype'), url('Switzer-Bold.woff2') format('woff2'), url('Switzer-Bold.woff') format('woff'), url('Switzer-Bold.ttf') format('truetype'), url('Switzer-Bold.svg#Switzer-Bold') format('svg');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Extrabold.eot');
+    src: url('Switzer-Extrabold.eot?#iefix') format('embedded-opentype'), url('Switzer-Extrabold.woff2') format('woff2'), url('Switzer-Extrabold.woff') format('woff'), url('Switzer-Extrabold.ttf') format('truetype'), url('Switzer-Extrabold.svg#Switzer-Extrabold') format('svg');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Switzer';
+    src: url('Switzer-Black.eot');
+    src: url('Switzer-Black.eot?#iefix') format('embedded-opentype'), url('Switzer-Black.woff2') format('woff2'), url('Switzer-Black.woff') format('woff'), url('Switzer-Black.ttf') format('truetype'), url('Switzer-Black.svg#Switzer-Black') format('svg');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
