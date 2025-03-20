@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facial Recognition | Clarifai</title>
+    <link rel="shortcut icon" href="https://www.clarifai.com/hubfs/logo/Clarifai/Clarifai%20Computer%20Vision%20Icon.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="facial-recognition.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Clarifai Logo">
+            </a>
+            <nav class="nav">
+                <a href="#" class="nav-link active">Facial Recognition</a>
+                <a href="#" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link">Models</a>
+                <a href="#" class="nav-link">Help</a>
+            </nav>
+            <div class="user-menu">
+                <div class="user">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                    <span>John Doe</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1>Gender Recognition</h1>
+                <p>Upload an image to detect faces and determine gender</p>
+            </div>
+
+            <div class="recognition-container">
+                <div class="upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content" id="uploadContent">
+                            <img src="https://www.clarifai.com/hubfs/upload-icon.svg" alt="Upload" class="upload-icon">
+                            <h3>Drag & Drop Image</h3>
+                            <p>or <span class="browse-link" id="browseLink">browse files</span></p>
+                            <p class="upload-info">Supported formats: JPG, PNG</p>
+                        </div>
+                        <div class="upload-loading" id="uploadLoading">
+                            <div class="spinner"></div>
+                            <p>Processing image...</p>
+                        </div>
+                        <input type="file" id="imageUpload" accept="image/jpeg, image/png, image/jpg" hidden>
+                    </div>
+                    <div class="upload-controls">
+                        <button class="btn btn-primary" id="uploadBtn">Upload Image</button>
+                        <button class="btn btn-secondary" id="resetBtn">Reset</button>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-header">
+                        <h2>Results</h2>
+                    </div>
+                    <div class="result-content">
+                        <div class="result-placeholder" id="resultPlaceholder">
+                            <img src="https://www.clarifai.com/hubfs/face-scan-icon.svg" alt="Face Scan" class="result-icon">
+                            <p>Upload an image to see gender recognition results</p>
+                        </div>
+                        <div class="result-display" id="resultDisplay">
+                            <div class="image-container">
+                                <img id="displayedImage" alt="Uploaded image">
+                            </div>
+                            <div class="detection-results" id="detectionResults"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="how-it-works">
+                <h2>How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Upload Image</h3>
+                            <p>Upload a photo containing one or more faces</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Face Detection</h3>
+                            <p>Our AI model detects all faces in the image</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Gender Classification</h3>
+                            <p>The model analyzes facial features to determine gender</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="disclaimer">
+                <h3>Important Note</h3>
+                <p>This facial recognition tool uses AI to predict gender based on visual features. The model has limitations and may not be accurate in all cases. All processing is done in your browser - no images are uploaded to our servers.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Clarifai Logo">
+                </div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Us</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2023 Clarifai. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="facial-recognition.js"></script>
+</body>
+</html>
+
