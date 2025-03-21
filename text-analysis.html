@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Text Analysis | Clarifai</title>
+  <link rel="shortcut icon" href="https://www.clarifai.com/hubfs/logo/Clarifai/Clarifai%20Computer%20Vision%20Icon.png">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="text-analysis.css">
+  
+  <!-- Chart.js for visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- D3.js for word cloud -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.5/build/d3.layout.cloud.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+          <div class="sidebar-header">
+              <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Logo" class="logo">
+              <button class="menu-toggle" id="menuToggle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+              </button>
+          </div>
+          <nav class="sidebar-nav">
+              <ul>
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                          <span>Dashboard</span>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="facial-recognition.html" class="nav-link">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                          <span>Gender Detection</span>
+                      </a>
+                  </li>
+                  <li class="nav-item active">
+                      <a href="text-analysis.html" class="nav-link">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                          <span>Text Analysis</span>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                          <span>Analytics</span>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                          <span>API Documentation</span>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                          <span>Settings</span>
+                      </a>
+                  </li>
+              </ul>
+          </nav>
+          <div class="sidebar-footer">
+              <div class="user-info">
+                  <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="user-avatar">
+                  <div class="user-details">
+                      <h4>John Doe</h4>
+                      <p>Administrator</p>
+                  </div>
+              </div>
+          </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+          <header class="main-header">
+              <div class="header-left">
+                  <h1>Text Analysis</h1>
+                  <nav class="breadcrumb">
+                      <a href="#">Dashboard</a>
+                      <span>/</span>
+                      <span>Text Analysis</span>
+                  </nav>
+              </div>
+              <div class="header-right">
+                  <div class="search-bar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                      <input type="text" placeholder="Search...">
+                  </div>
+                  <div class="header-actions">
+                      <button class="btn-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                          <span class="badge">3</span>
+                      </button>
+                      <button class="btn-icon" id="helpBtn">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                      </button>
+                      <button class="btn-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                      </button>
+                  </div>
+              </div>
+          </header>
+
+          <div class="content-wrapper">
+              <!-- Stats Cards -->
+              <div class="stats-cards">
+                  <div class="stat-card">
+                      <div class="stat-icon blue">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                      </div>
+                      <div class="stat-info">
+                          <h3>8,742</h3>
+                          <p>Texts Analyzed</p>
+                      </div>
+                      <div class="stat-change positive">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                          <span>+15.3%</span>
+                      </div>
+                  </div>
+                  <div class="stat-card">
+                      <div class="stat-icon purple">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                      </div>
+                      <div class="stat-info">
+                          <h3>96.4%</h3>
+                          <p>Sentiment Accuracy</p>
+                      </div>
+                      <div class="stat-change positive">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                          <span>+2.1%</span>
+                      </div>
+                  </div>
+                  <div class="stat-card">
+                      <div class="stat-icon green">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                      </div>
+                      <div class="stat-info">
+                          <h3>94.2%</h3>
+                          <p>Entity Recognition</p>
+                      </div>
+                      <div class="stat-change positive">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                          <span>+1.8%</span>
+                      </div>
+                  </div>
+                  <div class="stat-card">
+                      <div class="stat-icon orange">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      </div>
+                      <div class="stat-info">
+                          <h3>0.8s</h3>
+                          <p>Avg. Processing Time</p>
+                      </div>
+                      <div class="stat-change negative">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                          <span>-0.2s</span>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Text Analysis Tool -->
+              <div class="card text-analysis-tool">
+                  <div class="card-header">
+                      <h2>Text Analysis Tool</h2>
+                      <div class="card-actions">
+                          <button class="btn btn-sm btn-outline" id="clearBtn">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                              Clear
+                          </button>
+                          <button class="btn btn-sm btn-primary" id="analyzeBtn">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                              Analyze Text
+                          </button>
+                      </div>
+                  </div>
+                  <div class="card-body">
+                      <div class="text-input-container">
+                          <div class="text-input-header">
+                              <h3>Enter or paste text to analyze</h3>
+                              <div class="text-input-actions">
+                                  <button class="btn-icon" id="pasteBtn" title="Paste from clipboard">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                                  </button>
+                                  <button class="btn-icon" id="sampleBtn" title="Load sample text">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                  </button>
+                              </div>
+                          </div>
+                          <div class="text-input-wrapper">
+                              <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
+                              <div class="text-stats">
+                                  <span id="wordCount">0 words</span>
+                                  <span id="charCount">0 characters</span>
+                              </div>
+                          </div>
+                          <div class="analysis-options">
+                              <div class="option-group">
+                                  <label>Analysis Type</label>
+                                  <div class="checkbox-group">
+                                      <label class="checkbox">
+                                          <input type="checkbox" id="topicCheckbox" checked>
+                                          <span>Topic Detection</span>
+                                      </label>
+                                      <label class="checkbox">
+                                          <input type="checkbox" id="sentimentCheckbox" checked>
+                                          <span>Sentiment Analysis</span>
+                                      </label>
+                                      <label class="checkbox">
+                                          <input type="checkbox" id="entityCheckbox" checked>
+                                          <span>Entity Recognition</span>
+                                      </label>
+                                      <label class="checkbox">
+                                          <input type="checkbox" id="keywordCheckbox" checked>
+                                          <span>Keyword Extraction</span>
+                                      </label>
+                                  </div>
+                              </div>
+                              <div class="option-group">
+                                  <label>Language</label>
+                                  <select id="languageSelect" class="form-select">
+                                      <option value="en">English</option>
+                                      <option value="es">Spanish</option>
+                                      <option value="fr">French</option>
+                                      <option value="de">German</option>
+                                      <option value="it">Italian</option>
+                                      <option value="pt">Portuguese</option>
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="analysis-results" id="analysisResults">
+                          <div class="results-loading" id="resultsLoading">
+                              <div class="spinner"></div>
+                              <p>Analyzing text...</p>
+                          </div>
+                          
+                          <div class="results-content" id="resultsContent">
+                              <div class="results-tabs">
+                                  <button class="tab-btn active" data-tab="summary">Summary</button>
+                                  <button class="tab-btn" data-tab="sentiment">Sentiment</button>
+                                  <button class="tab-btn" data-tab="entities">Entities</button>
+                                  <button class="tab-btn" data-tab="keywords">Keywords</button>
+                              </div>
+                              
+                              <div class="tab-content active" id="summaryTab">
+                                  <div class="summary-grid">
+                                      <div class="summary-card">
+                                          <h4>Topics</h4>
+                                          <div class="topics-list" id="topicsList"></div>
+                                      </div>
+                                      <div class="summary-card">
+                                          <h4>Sentiment</h4>
+                                          <div class="sentiment-summary" id="sentimentSummary"></div>
+                                      </div>
+                                      <div class="summary-card">
+                                          <h4>Key Entities</h4>
+                                          <div class="entities-summary" id="entitiesSummary"></div>
+                                      </div>
+                                      <div class="summary-card">
+                                          <h4>Text Statistics</h4>
+                                          <div class="text-statistics" id="textStatistics"></div>
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div class="tab-content" id="sentimentTab">
+                                  <div class="sentiment-analysis">
+                                      <div class="sentiment-score">
+                                          <h4>Overall Sentiment</h4>
+                                          <div class="sentiment-meter" id="sentimentMeter"></div>
+                                      </div>
+                                      <div class="sentiment-chart-container">
+                                          <h4>Emotion Analysis</h4>
+                                          <canvas id="emotionChart" height="250"></canvas>
+                                      </div>
+                                      <div class="sentiment-details">
+                                          <h4>Sentiment Details</h4>
+                                          <div class="sentiment-details-content" id="sentimentDetails"></div>
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div class="tab-content" id="entitiesTab">
+                                  <div class="entities-analysis">
+                                      <div class="entities-chart-container">
+                                          <h4>Entity Types</h4>
+                                          <canvas id="entityTypeChart" height="250"></canvas>
+                                      </div>
+                                      <div class="entities-list-container">
+                                          <h4>Detected Entities</h4>
+                                          <div class="entities-list" id="entitiesList"></div>
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div class="tab-content" id="keywordsTab">
+                                  <div class="keywords-analysis">
+                                      <div class="wordcloud-container">
+                                          <h4>Keyword Cloud</h4>
+                                          <div id="wordCloud"></div>
+                                      </div>
+                                      <div class="keywords-list-container">
+                                          <h4>Top Keywords</h4>
+                                          <div class="keywords-list" id="keywordsList"></div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Recent Analysis -->
+              <div class="card recent-analysis">
+                  <div class="card-header">
+                      <h2>Recent Analysis</h2>
+                      <div class="card-actions">
+                          <button class="btn btn-sm btn-outline">View All</button>
+                      </div>
+                  </div>
+                  <div class="card-body">
+                      <div class="activity-list">
+                          <div class="activity-item">
+                              <div class="activity-icon blue">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                              </div>
+                              <div class="activity-details">
+                                  <h4>Customer Feedback Analysis</h4>
+                                  <p>Analyzed 250 customer reviews - Overall sentiment: Positive</p>
+                                  <span class="activity-time">10 minutes ago</span>
+                              </div>
+                          </div>
+                          <div class="activity-item">
+                              <div class="activity-icon purple">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                              </div>
+                              <div class="activity-details">
+                                  <h4>Social Media Monitoring</h4>
+                                  <p>Analyzed 500 tweets about product launch - 78% positive sentiment</p>
+                                  <span class="activity-time">2 hours ago</span>
+                              </div>
+                          </div>
+                          <div class="activity-item">
+                              <div class="activity-icon green">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                              </div>
+                              <div class="activity-details">
+                                  <h4>Product Description Analysis</h4>
+                                  <p>Analyzed 15 product descriptions - Extracted 45 key features</p>
+                                  <span class="activity-time">Yesterday</span>
+                              </div>
+                          </div>
+                          <div class="activity-item">
+                              <div class="activity-icon orange">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                              </div>
+                              <div class="activity-details">
+                                  <h4>Competitor Analysis</h4>
+                                  <p>Analyzed 25 competitor websites - Identified 12 key market trends</p>
+                                  <span class="activity-time">2 days ago</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </main>
+  </div>
+
+  <!-- Help Modal -->
+  <div class="modal" id="helpModal">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2>How to Use Text Analysis</h2>
+              <button class="close-modal" id="closeModal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="help-section">
+                  <h3>1. Enter Your Text</h3>
+                  <p>Type or paste the text you want to analyze in the text area. You can also load sample text by clicking the document icon.</p>
+              </div>
+              <div class="help-section">
+                  <h3>2. Select Analysis Options</h3>
+                  <p>Choose which types of analysis you want to perform by checking the corresponding options.</p>
+              </div>
+              <div class="help-section">
+                  <h3>3. Choose Language</h3>
+                  <p>Select the language of your text from the dropdown menu for more accurate results.</p>
+              </div>
+              <div class="help-section">
+                  <h3>4. Analyze Text</h3>
+                  <p>Click the "Analyze Text" button to start the analysis process.</p>
+              </div>
+              <div class="help-section">
+                  <h3>5. View Results</h3>
+                  <p>Results will be displayed in tabs for easy navigation. The Summary tab provides an overview of all analyses.</p>
+              </div>
+              <div class="help-note">
+                  <p><strong>Note:</strong> For best results, provide text with at least 100 words. The more text you provide, the more accurate the analysis will be.</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script src="text-analysis.js"></script>
+</body>
+</html>
+
