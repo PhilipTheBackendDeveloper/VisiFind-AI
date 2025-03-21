@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facial Recognition | Clarifai</title>
+    <title>AI Vision Platform | Gender Detection</title>
     <link rel="shortcut icon" href="https://www.clarifai.com/hubfs/logo/Clarifai/Clarifai%20Computer%20Vision%20Icon.png">
     
     <!-- Fonts -->
@@ -13,129 +13,358 @@
     
     <!-- Styles -->
     <link rel="stylesheet" href="facial-recognition.css">
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <a href="#" class="logo">
-                <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Clarifai Logo">
-            </a>
-            <nav class="nav">
-                <a href="#" class="nav-link active">Facial Recognition</a>
-                <a href="#" class="nav-link">Dashboard</a>
-                <a href="#" class="nav-link">Models</a>
-                <a href="#" class="nav-link">Help</a>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Logo" class="logo">
+                <button class="menu-toggle" id="menuToggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="home.html" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span>Gender Detection</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            <span>Face Analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                            <span>API Documentation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
             </nav>
-            <div class="user-menu">
-                <div class="user">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
-                    <span>John Doe</span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="main">
-        <div class="container">
-            <div class="page-header">
-                <h1>Gender Recognition</h1>
-                <p>Upload an image to detect faces and determine gender</p>
-            </div>
-
-            <div class="recognition-container">
-                <div class="upload-section">
-                    <div class="upload-area" id="uploadArea">
-                        <div class="upload-content" id="uploadContent">
-                            <img src="https://www.clarifai.com/hubfs/upload-icon.svg" alt="Upload" class="upload-icon">
-                            <h3>Drag & Drop Image</h3>
-                            <p>or <span class="browse-link" id="browseLink">browse files</span></p>
-                            <p class="upload-info">Supported formats: JPG, PNG</p>
-                        </div>
-                        <div class="upload-loading" id="uploadLoading">
-                            <div class="spinner"></div>
-                            <p>Processing image...</p>
-                        </div>
-                        <input type="file" id="imageUpload" accept="image/jpeg, image/png, image/jpg" hidden>
-                    </div>
-                    <div class="upload-controls">
-                        <button class="btn btn-primary" id="uploadBtn">Upload Image</button>
-                        <button class="btn btn-secondary" id="resetBtn">Reset</button>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="user-avatar">
+                    <div class="user-details">
+                        <h4>John Doe</h4>
+                        <p>Administrator</p>
                     </div>
                 </div>
+            </div>
+        </aside>
 
-                <div class="result-section">
-                    <div class="result-header">
-                        <h2>Results</h2>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>Gender Detection</h1>
+                    <nav class="breadcrumb">
+                        <a href="#">Dashboard</a>
+                        <span>/</span>
+                        <span>Gender Detection</span>
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" placeholder="Search...">
                     </div>
-                    <div class="result-content">
-                        <div class="result-placeholder" id="resultPlaceholder">
-                            <img src="https://www.clarifai.com/hubfs/face-scan-icon.svg" alt="Face Scan" class="result-icon">
-                            <p>Upload an image to see gender recognition results</p>
+                    <div class="header-actions">
+                        <button class="btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                            <span class="badge">3</span>
+                        </button>
+                        <button class="btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        </button>
+                        <button class="btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Stats Cards -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
-                        <div class="result-display" id="resultDisplay">
-                            <div class="image-container">
-                                <img id="displayedImage" alt="Uploaded image">
+                        <div class="stat-info">
+                            <h3>12,543</h3>
+                            <p>Total Faces Analyzed</p>
+                        </div>
+                        <div class="stat-change positive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                            <span>+12.5%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>3,128</h3>
+                            <p>Images Processed</p>
+                        </div>
+                        <div class="stat-change positive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                            <span>+8.2%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>98.7%</h3>
+                            <p>Accuracy Rate</p>
+                        </div>
+                        <div class="stat-change positive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                            <span>+1.3%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1.2s</h3>
+                            <p>Avg. Processing Time</p>
+                        </div>
+                        <div class="stat-change negative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <span>-0.3s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Recognition Tool -->
+                <div class="card recognition-tool">
+                    <div class="card-header">
+                        <h2>Face++ Gender Detection</h2>
+                        <div class="card-actions">
+                            <button class="btn-icon" id="helpBtn" title="Help">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="recognition-container">
+                            <div class="upload-section">
+                                <!-- Update the upload area to make it more interactive -->
+                                <div class="upload-area" id="uploadArea">
+                                    <div class="upload-content" id="uploadContent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                        <h3>Drag & Drop Image</h3>
+                                        <p>or <span class="browse-link" id="browseLink">browse files</span></p>
+                                        <p class="upload-info">Supported formats: JPG, PNG, JPEG</p>
+                                    </div>
+                                    <div class="upload-loading" id="uploadLoading">
+                                        <div class="spinner"></div>
+                                        <p>Processing image with Face++ API...</p>
+                                    </div>
+                                    <input type="file" id="imageUpload" accept="image/jpeg, image/png, image/jpg" hidden>
+                                </div>
+                                <div class="upload-controls">
+                                    <button class="btn btn-primary" id="uploadBtn">Upload Image</button>
+                                    <button class="btn btn-secondary" id="resetBtn">Reset</button>
+                                </div>
+                                <div class="api-info">
+                                    <h3>Face++ API Information</h3>
+                                    <div class="api-info-content">
+                                        <p><strong>API Key:</strong> 994K5wKFEVQiwvOjoj8hCtqPADrSEOiO</p>
+                                        <p><strong>API Secret:</strong> ••••••••••••••••</p>
+                                        <p><strong>Status:</strong> <span class="api-status active">Active</span></p>
+                                    </div>
+                                    <div class="api-features">
+                                        <div class="feature-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                            <span>Gender Detection</span>
+                                        </div>
+                                        <div class="feature-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                            <span>Age Estimation</span>
+                                        </div>
+                                        <div class="feature-item">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                            <span>Emotion Analysis</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="detection-results" id="detectionResults"></div>
+                            
+                            <div class="result-section">
+                                <div class="result-container">
+                                    <div class="result-image-container" id="resultImageContainer">
+                                        <div class="result-placeholder" id="resultPlaceholder">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                            <p>Upload an image to see gender detection results</p>
+                                        </div>
+                                        <img id="displayedImage" alt="Uploaded image" hidden>
+                                        <canvas id="resultCanvas" hidden></canvas>
+                                    </div>
+                                    <div class="result-details" id="resultDetails">
+                                        <!-- Results will be displayed here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div class="analytics-section">
+                    <div class="card gender-distribution">
+                        <div class="card-header">
+                            <h2>Gender Distribution</h2>
+                            <div class="card-actions">
+                                <select class="form-select">
+                                    <option>Last 7 days</option>
+                                    <option>Last 30 days</option>
+                                    <option>Last 90 days</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="genderChart" height="250"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card age-distribution">
+                        <div class="card-header">
+                            <h2>Age Distribution</h2>
+                            <div class="card-actions">
+                                <select class="form-select">
+                                    <option>Last 7 days</option>
+                                    <option>Last 30 days</option>
+                                    <option>Last 90 days</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="ageChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card recent-activity">
+                    <div class="card-header">
+                        <h2>Recent Activity</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-outline">View All</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon blue">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                </div>
+                                <div class="activity-details">
+                                    <h4>Image Processed</h4>
+                                    <p>group_photo_25.jpg - 5 faces detected</p>
+                                    <span class="activity-time">2 minutes ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon purple">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                </div>
+                                <div class="activity-details">
+                                    <h4>API Keys Updated</h4>
+                                    <p>Face++ API credentials were updated</p>
+                                    <span class="activity-time">1 hour ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon green">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                </div>
+                                <div class="activity-details">
+                                    <h4>Batch Processing Completed</h4>
+                                    <p>25 images processed successfully</p>
+                                    <span class="activity-time">3 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon orange">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                </div>
+                                <div class="activity-details">
+                                    <h4>System Alert</h4>
+                                    <p>API rate limit at 80% of monthly quota</p>
+                                    <span class="activity-time">Yesterday</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </main>
+    </div>
 
-            <div class="how-it-works">
-                <h2>How It Works</h2>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h3>Upload Image</h3>
-                            <p>Upload a photo containing one or more faces</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h3>Face Detection</h3>
-                            <p>Our AI model detects all faces in the image</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h3>Gender Classification</h3>
-                            <p>The model analyzes facial features to determine gender</p>
-                        </div>
-                    </div>
-                </div>
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>How to Use Gender Detection</h2>
+                <button class="close-modal" id="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
-
-            <div class="disclaimer">
-                <h3>Important Note</h3>
-                <p>This facial recognition tool uses AI to predict gender based on visual features. The model has limitations and may not be accurate in all cases. All processing is done in your browser - no images are uploaded to our servers.</p>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>1. Upload an Image</h3>
+                    <p>Click the "Upload Image" button or drag and drop an image containing one or more faces.</p>
+                </div>
+                <div class="help-section">
+                    <h3>2. Face Detection</h3>
+                    <p>The Face++ API will automatically detect all faces in the image.</p>
+                </div>
+                <div class="help-section">
+                    <h3>3. Gender Analysis</h3>
+                    <p>For each detected face, the system will determine gender and display the results with confidence scores.</p>
+                </div>
+                <div class="help-section">
+                    <h3>4. View Results</h3>
+                    <p>Results will show each face with gender classification and additional attributes like age and emotion.</p>
+                </div>
+                <div class="help-note">
+                    <p><strong>Note:</strong> This tool uses Face++ API for gender detection. Results are based on visual features and may not be 100% accurate in all cases.</p>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Clarifai Logo">
-                </div>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Contact Us</a>
-                </div>
-            </div>
-            <div class="footer-copyright">
-                <p>&copy; 2023 Clarifai. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
     <script src="facial-recognition.js"></script>
 </body>
 </html>
