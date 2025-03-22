@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const apiKey = "994K5wKFEVQiwvOjoj8hCtqPADrSEOiO"
   const apiSecret = "EnLlzV-TO-T6NnTVS8dBViFRuEshuTW7"
 
-  // Initialize charts
+  // Initialize chart
   initCharts()
 
   // Toggle sidebar on mobile
