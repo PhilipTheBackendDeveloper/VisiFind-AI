@@ -31,8 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const historyModal = document.getElementById("historyModal")
   const closeHistoryModal = document.getElementById("closeHistoryModal")
 
-  // Picogen API configuration - kept for reference but using fallback images
-  const PICOGEN_API_KEY = "818080c0cfeea98a0c12bf534766ad293882be6b3c7c5604d97ad85fae29cb4e"
+  // Replace the DeepAI API configuration with Unsplash API configuration
+  const UNSPLASH_ACCESS_KEY = "1mk_cAU_OJjDdSHNye5NThF0vBC0ubSmYTG4A-dLpZQ"
+  const UNSPLASH_API_URL = "https://api.unsplash.com"
 
   // Store generated images for download
   let generatedImages = []
@@ -131,16 +132,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Sample prompts for random generation
   const samplePrompts = [
-    "A serene Japanese garden with cherry blossoms, a small bridge over a koi pond, and traditional architecture",
-    "A futuristic cityscape at night with flying cars, neon lights, and towering skyscrapers",
-    "A mystical forest with glowing mushrooms, fairy lights, and a small cottage in the distance",
-    "An underwater scene with colorful coral reefs, exotic fish, and sunlight filtering through the water",
-    "A steampunk-inspired mechanical owl with brass gears, glowing eyes, and intricate details",
-    "A cozy cabin in the mountains during winter, with smoke coming from the chimney and snow-covered pine trees",
-    "A vibrant market scene in Marrakech with colorful spices, textiles, and bustling crowds",
-    "A surreal dreamscape with floating islands, impossible architecture, and a purple sky",
-    "A detailed portrait of a cyberpunk character with neon implants, in a rainy night setting",
-    "A fantasy castle perched on a cliff with waterfalls, surrounded by a magical landscape",
+    "Japanese garden with cherry blossoms",
+    "Futuristic cityscape at night",
+    "Mystical forest with glowing mushrooms",
+    "Underwater scene with coral reefs",
+    "Steampunk mechanical owl",
+    "Cozy cabin in the mountains during winter",
+    "Vibrant market scene in Marrakech",
+    "Surreal dreamscape with floating islands",
+    "Cyberpunk character in a rainy night",
+    "Fantasy castle on a cliff",
   ]
 
   // Random prompt
@@ -168,15 +169,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // This would typically fetch new suggestions from an API
     // For demo purposes, we'll just show a loading state
     refreshSuggestionsBtn.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-            Refreshing...
-        `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        Refreshing...
+    `
 
     setTimeout(() => {
       refreshSuggestionsBtn.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                Refresh
-            `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            Refresh
+        `
     }, 1500)
   })
 
@@ -208,10 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Get selected options
     const style = document.querySelector(".style-option.active").getAttribute("data-style")
-    const size = sizeSelect.value
     const count = Number.parseInt(countSelect.value)
-    const creativity = creativitySlider.value
-    const detail = detailSlider.value
 
     // Show loading state
     resultPlaceholder.style.display = "none"
@@ -223,8 +221,8 @@ document.addEventListener("DOMContentLoaded", () => {
     progressText.textContent = "Initializing..."
 
     try {
-      // Generate images with fallback method since API has CORS issues
-      await simulateImageGeneration(prompt, style, size, count, creativity, detail)
+      // Generate images with Unsplash API
+      await generateImagesWithUnsplash(prompt, style, count)
     } catch (error) {
       console.error("Error generating images:", error)
       alert("An error occurred while generating images. Please try again.")
@@ -235,81 +233,89 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-  // Simulate image generation with fallback images
-  async function simulateImageGeneration(prompt, style, size, count, creativity, detail) {
+  // Generate images with Unsplash API
+  async function generateImagesWithUnsplash(prompt, style, count) {
     // Reset generated images array
     generatedImages = []
 
-    // Simulate API call with progress updates
-    for (let progress = 0; progress <= 100; progress += 5) {
-      progressFill.style.width = `${progress}%`
+    // Update progress
+    progressFill.style.width = "20%"
+    progressText.textContent = "Searching for images..."
 
-      if (progress < 20) {
-        progressText.textContent = "Interpreting prompt..."
-      } else if (progress < 40) {
-        progressText.textContent = "Generating composition..."
-      } else if (progress < 60) {
-        progressText.textContent = "Adding details..."
-      } else if (progress < 80) {
-        progressText.textContent = "Applying style..."
-      } else {
-        progressText.textContent = "Finalizing images..."
+    // Prepare search query based on prompt and style
+    let searchQuery = prompt
+
+    // Add style keywords to enhance search results
+    switch (style) {
+      case "realistic":
+        searchQuery += " realistic photo"
+        break
+      case "artistic":
+        searchQuery += " artistic"
+        break
+      case "anime":
+        searchQuery += " illustration"
+        break
+      case "3d":
+        searchQuery += " 3D render"
+        break
+      case "sketch":
+        searchQuery += " sketch drawing"
+        break
+    }
+
+    try {
+      // Update progress
+      progressFill.style.width = "40%"
+      progressText.textContent = "Fetching images..."
+
+      // Fetch images from Unsplash
+      const response = await fetch(
+        `${UNSPLASH_API_URL}/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=${count}&orientation=squarish`,
+        {
+          headers: {
+            Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
+          },
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error(`Unsplash API error: ${response.status} ${response.statusText}`)
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 100))
-    }
+      const data = await response.json()
 
-    // Sample image URLs based on style
-    const styleImages = {
-      realistic: [
-        "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
-        "https://images.unsplash.com/photo-1682686580186-b55d2a91053c",
-        "https://images.unsplash.com/photo-1682687982501-1e58ab814714",
-      ],
-      artistic: [
-        "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5",
-        "https://images.unsplash.com/photo-1547891654-e66ed7ebb968",
-        "https://images.unsplash.com/photo-1549490349-8643362247b5",
-        "https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb",
-      ],
-      anime: [
-        "https://images.unsplash.com/photo-1560972550-aba3456b5564",
-        "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f",
-        "https://images.unsplash.com/photo-1578632767115-351597cf2477",
-        "https://images.unsplash.com/photo-1541562232579-512a21360020",
-      ],
-      "3d": [
-        "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e",
-        "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2",
-        "https://images.unsplash.com/photo-1638803040283-7a5ffd48dad5",
-        "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4",
-      ],
-      sketch: [
-        "https://images.unsplash.com/photo-1572883454114-1cf0031ede2a",
-        "https://images.unsplash.com/photo-1618331835717-801e976710b2",
-        "https://images.unsplash.com/photo-1513364776144-60967b0f800f",
-        "https://images.unsplash.com/photo-1517971129774-8a2b38fa128e",
-      ],
-    }
+      // Update progress
+      progressFill.style.width = "70%"
+      progressText.textContent = "Processing results..."
 
-    // Create result items
-    for (let i = 0; i < count; i++) {
-      const imageUrl = styleImages[style][i % styleImages[style].length]
+      // Check if we got any results
+      if (data.results.length === 0) {
+        throw new Error("No images found for your query. Please try a different prompt.")
+      }
 
-      // Add image to generated images array
-      generatedImages.push({
-        url: imageUrl,
+      // Store image data
+      generatedImages = data.results.map((photo) => ({
+        url: photo.urls.regular,
+        downloadUrl: photo.urls.full,
         prompt: prompt,
-        style: style,
-      })
+        user: {
+          name: photo.user.name,
+          username: photo.user.username,
+          link: photo.user.links.html,
+        },
+      }))
+
+      // Display results
+      displayResults(generatedImages)
+
+      // Update progress
+      progressFill.style.width = "100%"
+      progressText.textContent = "Complete!"
+    } catch (error) {
+      console.error("Error fetching images from Unsplash:", error)
+      throw error
     }
-
-    // Display results
-    displayResults(generatedImages)
-
-    // Add to history
-    addToHistory(prompt)
   }
 
   // Display generated results
@@ -321,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (images.length === 0) {
       resultLoading.style.display = "none"
       resultPlaceholder.style.display = "flex"
-      alert("Failed to generate images. Please try again with a different prompt.")
+      alert("Failed to find images. Please try again with a different prompt.")
       return
     }
 
@@ -337,16 +343,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const resultItem = document.createElement("div")
       resultItem.className = "result-item"
       resultItem.innerHTML = `
-                <img src="${image.url}" alt="Generated image ${index + 1}" class="result-image">
-                <div class="result-overlay">
-                    <button class="btn-icon download-btn" data-index="${index}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    </button>
-                    <button class="btn-icon share-single-btn" data-index="${index}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                    </button>
-                </div>
-            `
+            <img src="${image.url}" alt="Generated image ${index + 1}" class="result-image">
+            <div class="result-overlay">
+                <button class="btn-icon download-btn" data-index="${index}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                </button>
+                <button class="btn-icon share-single-btn" data-index="${index}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                </button>
+            </div>
+            <div class="image-attribution">
+                Photo by <a href="${image.user.link}?utm_source=clarifai&utm_medium=referral" target="_blank">${image.user.name}</a> on <a href="https://unsplash.com/?utm_source=clarifai&utm_medium=referral" target="_blank">Unsplash</a>
+            </div>
+        `
 
       resultGrid.appendChild(resultItem)
     })
@@ -355,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".download-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const index = Number.parseInt(e.currentTarget.getAttribute("data-index"))
-        downloadImage(images[index].url, `generated-image-${index + 1}.jpg`)
+        downloadImage(images[index].downloadUrl, `unsplash-image-${index + 1}.jpg`)
       })
     })
 
@@ -363,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".share-single-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const index = Number.parseInt(e.currentTarget.getAttribute("data-index"))
-        shareImage(images[index].url)
+        shareImage(images[index].url, images[index].user)
       })
     })
 
@@ -374,6 +383,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Enable action buttons
     downloadAllBtn.disabled = false
     shareBtn.disabled = false
+
+    // Add to history
+    addToHistory(promptInput.value)
   }
 
   // Download a single image
@@ -413,13 +425,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Share a single image
-  function shareImage(url) {
+  function shareImage(url, user) {
     // Check if Web Share API is supported
     if (navigator.share) {
       navigator
         .share({
-          title: "AI Generated Image",
-          text: "Check out this AI-generated image!",
+          title: "Image from Unsplash",
+          text: `Photo by ${user.name} on Unsplash`,
           url: url,
         })
         .catch((error) => {
@@ -475,14 +487,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const historyItem = document.createElement("div")
       historyItem.className = "history-item"
       historyItem.innerHTML = `
-        <div class="history-content">
-            <p>${item.prompt}</p>
-            <span class="history-time">${timeAgo}</span>
-        </div>
-        <button class="btn-icon copy-history-btn" data-index="${index}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-        </button>
-      `
+      <div class="history-content">
+          <p>${item.prompt}</p>
+          <span class="history-time">${timeAgo}</span>
+      </div>
+      <button class="btn-icon copy-history-btn" data-index="${index}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+      </button>
+    `
 
       historyList.appendChild(historyItem)
     })
@@ -541,7 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
     generatedImages.forEach((image, index) => {
       // Add a small delay between downloads to avoid browser issues
       setTimeout(() => {
-        downloadImage(image.url, `generated-image-${index + 1}.jpg`)
+        downloadImage(image.downloadUrl, `unsplash-image-${index + 1}.jpg`)
       }, 300 * index)
     })
   })
@@ -554,7 +566,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Share the first image
-    shareImage(generatedImages[0].url)
+    shareImage(generatedImages[0].url, generatedImages[0].user)
   })
 })
 
