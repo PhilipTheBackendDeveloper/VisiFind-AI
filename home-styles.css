@@ -74,6 +74,9 @@ body {
   line-height: 1.5;
   min-height: 100vh;
 }
+.logo {
+  margin-left: 70px; /* Adjust as needed */
+}
 
 a {
   color: var(--accent-blue);
