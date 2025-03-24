@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose Analyzer - Clarifai AI Platform</title>
+    <link rel="shortcut icon" href="https://www.clarifai.com/hubfs/logo/Clarifai/Clarifai%20Computer%20Vision%20Icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   
+    <link rel="stylesheet" href="pose-analyzer.css">
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0"></script>
+    <!-- TensorFlow.js models -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@2.0.0"></script>
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="home.html">
+                    <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Clarifai Logo">
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a href="home.html">Dashboard</a></li>
+                    <li class="nav-item"><a href="facial-recognition.html">Facial Recognition</a></li>
+                    <li class="nav-item"><a href="text-analysis.html">Text Analysis</a></li>
+                    <li class="nav-item"><a href="image-generator.html">Image Generator</a></li>
+                    <li class="nav-item"><a href="document-qa.html">Document Q&A</a></li>
+                    <li class="nav-item"><a href="video-recognition.html">Video Recognition</a></li>
+                    <li class="nav-item active"><a href="pose-analyzer.html">Pose Analyzer</a></li>
+                </ul>
+            </div>
+            <div class="navbar-profile">
+                <div class="profile-dropdown">
+                    <button class="profile-btn">
+                        <img src="/placeholder.svg?height=40&width=40" alt="Profile" class="profile-img">
+                        <span class="profile-name">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="profile-dropdown-content">
+                        <a href="#"><i class="fas fa-user"></i> Profile</a>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pose-analyzer-container">
+        <div class="page-header">
+            <h1><i class="fas fa-walking"></i> Pose Analyzer</h1>
+            <p>Analyze human poses in real-time with advanced AI</p>
+        </div>
+
+        <div class="pose-analyzer-content">
+            <!-- Left Panel: Camera/Video Feed -->
+            <div class="pose-feed-panel">
+                <div class="panel-header">
+                    <h2>Pose Detection</h2>
+                    <div class="panel-controls">
+                        <button id="fullscreen-btn" class="icon-btn" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button id="settings-btn" class="icon-btn" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <button id="help-btn" class="icon-btn" title="Help">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <video id="video" playsinline></video>
+                        <canvas id="output-canvas"></canvas>
+                        <div id="loading-indicator" class="loading-indicator">
+                            <div class="spinner"></div>
+                            <p>Loading AI model...</p>
+                        </div>
+                        <div id="no-webcam-message" class="no-webcam-message hidden">
+                            <i class="fas fa-video-slash"></i>
+                            <p>No webcam detected or access denied</p>
+                            <button id="try-again-btn" class="primary-btn">Try Again</button>
+                        </div>
+                    </div>
+                    <div class="video-controls">
+                        <button id="camera-btn" class="control-btn active" title="Use Camera">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <button id="upload-btn" class="control-btn" title="Upload Video">
+                            <i class="fas fa-upload"></i>
+                        </button>
+                        <button id="url-btn" class="control-btn" title="Video URL">
+                            <i class="fas fa-link"></i>
+                        </button>
+                        <button id="snapshot-btn" class="control-btn" title="Take Snapshot">
+                            <i class="fas fa-camera-retro"></i>
+                        </button>
+                        <button id="record-btn" class="control-btn" title="Record Analysis">
+                            <i class="fas fa-record-vinyl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="model-controls">
+                    <div class="model-selector">
+                        <label for="model-select">Model:</label>
+                        <select id="model-select">
+                            <option value="movenet">MoveNet (Faster)</option>
+                            <option value="posenet">PoseNet (More Accurate)</option>
+                            <option value="blazepose">BlazePose (Full Body)</option>
+                        </select>
+                    </div>
+                    <div class="detection-controls">
+                        <div class="control-group">
+                            <label for="confidence-threshold">Confidence Threshold:</label>
+                            <input type="range" id="confidence-threshold" min="0" max="1" step="0.05" value="0.5">
+                            <span id="confidence-value">0.5</span>
+                        </div>
+                        <div class="control-group">
+                            <label for="detection-speed">Detection Speed:</label>
+                            <input type="range" id="detection-speed" min="1" max="5" step="1" value="3">
+                            <span id="speed-value">Normal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Analysis & Results -->
+            <div class="pose-analysis-panel">
+                <div class="panel-header">
+                    <h2>Analysis & Results</h2>
+                    <div class="panel-controls">
+                        <button id="export-btn" class="icon-btn" title="Export Results">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button id="clear-btn" class="icon-btn" title="Clear Results">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analysis-tabs">
+                    <button class="tab-btn active" data-tab="pose-data">Pose Data</button>
+                    <button class="tab-btn" data-tab="analytics">Analytics</button>
+                    <button class="tab-btn" data-tab="exercises">Exercises</button>
+                    <button class="tab-btn" data-tab="snapshots">Snapshots</button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- Pose Data Tab -->
+                    <div id="pose-data" class="tab-pane active">
+                        <div class="pose-metrics">
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3>Pose Confidence</h3>
+                                    <div class="metric-value" id="pose-confidence">0%</div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-people-arrows"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3>People Detected</h3>
+                                    <div class="metric-value" id="people-count">0</div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3>FPS</h3>
+                                    <div class="metric-value" id="fps-counter">0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="keypoints-container">
+                            <h3>Keypoints</h3>
+                            <div class="keypoints-visualization">
+                                <div class="human-figure">
+                                    <img src="/placeholder.svg?height=300&width=150" alt="Human Figure" id="human-figure">
+                                    <canvas id="keypoints-canvas" width="150" height="300"></canvas>
+                                </div>
+                                <div class="keypoints-list" id="keypoints-list">
+                                    <div class="keypoint-item">
+                                        <span class="keypoint-name">No pose detected</span>
+                                        <span class="keypoint-confidence">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="posture-analysis">
+                            <h3>Posture Analysis</h3>
+                            <div class="posture-metrics" id="posture-metrics">
+                                <div class="posture-metric">
+                                    <div class="posture-label">Shoulder Alignment</div>
+                                    <div class="posture-progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <div class="posture-value">0%</div>
+                                </div>
+                                <div class="posture-metric">
+                                    <div class="posture-label">Hip Alignment</div>
+                                    <div class="posture-progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <div class="posture-value">0%</div>
+                                </div>
+                                <div class="posture-metric">
+                                    <div class="posture-label">Spine Angle</div>
+                                    <div class="posture-progress">
+                                        <div class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <div class="posture-value">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Tab -->
+                    <div id="analytics" class="tab-pane">
+                        <div class="analytics-container">
+                            <div class="chart-container">
+                                <h3>Pose Stability Over Time</h3>
+                                <canvas id="stability-chart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h3>Joint Movement Heatmap</h3>
+                                <canvas id="movement-chart"></canvas>
+                            </div>
+                            <div class="analytics-metrics">
+                                <div class="analytics-metric">
+                                    <h4>Average Pose Confidence</h4>
+                                    <div class="metric-value" id="avg-confidence">0%</div>
+                                </div>
+                                <div class="analytics-metric">
+                                    <h4>Movement Intensity</h4>
+                                    <div class="metric-value" id="movement-intensity">Low</div>
+                                </div>
+                                <div class="analytics-metric">
+                                    <h4>Posture Score</h4>
+                                    <div class="metric-value" id="posture-score">0/100</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exercises Tab -->
+                    <div id="exercises" class="tab-pane">
+                        <div class="exercises-container">
+                            <div class="exercise-selector">
+                                <h3>Choose an Exercise</h3>
+                                <div class="exercise-grid">
+                                    <div class="exercise-card" data-exercise="squat">
+                                        <div class="exercise-icon">
+                                            <i class="fas fa-dumbbell"></i>
+                                        </div>
+                                        <h4>Squat</h4>
+                                    </div>
+                                    <div class="exercise-card" data-exercise="pushup">
+                                        <div class="exercise-icon">
+                                            <i class="fas fa-dumbbell"></i>
+                                        </div>
+                                        <h4>Push-up</h4>
+                                    </div>
+                                    <div class="exercise-card" data-exercise="lunge">
+                                        <div class="exercise-icon">
+                                            <i class="fas fa-dumbbell"></i>
+                                        </div>
+                                        <h4>Lunge</h4>
+                                    </div>
+                                    <div class="exercise-card" data-exercise="plank">
+                                        <div class="exercise-icon">
+                                            <i class="fas fa-dumbbell"></i>
+                                        </div>
+                                        <h4>Plank</h4>
+                                    </div>
+                                    <div class="exercise-card" data-exercise="jumping-jack">
+                                        <div class="exercise-icon">
+                                            <i class="fas fa-dumbbell"></i>
+                                        </div>
+                                        <h4>Jumping Jack</h4>
+                                    </div>
+                                    <div class="exercise-card" data-exercise="custom">
+                                        <div class="exercise-icon">
+                                            <i class="fas fa-plus"></i>
+                                        </div>
+                                        <h4>Custom</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="exercise-tracker hidden" id="exercise-tracker">
+                                <div class="exercise-header">
+                                    <h3 id="exercise-name">Exercise Name</h3>
+                                    <button id="stop-exercise" class="secondary-btn">
+                                        <i class="fas fa-stop"></i> Stop
+                                    </button>
+                                </div>
+                                <div class="exercise-progress">
+                                    <div class="progress-circle">
+                                        <svg width="120" height="120" viewBox="0 0 120 120">
+                                            <circle cx="60" cy="60" r="54" fill="none" stroke="#e6e6e6" stroke-width="12" />
+                                            <circle id="progress-circle" cx="60" cy="60" r="54" fill="none" stroke="#4a6cf7" stroke-width="12" stroke-dasharray="339.292" stroke-dashoffset="339.292" />
+                                        </svg>
+                                        <div class="progress-text">
+                                            <span id="rep-count">0</span>
+                                            <span class="rep-label">reps</span>
+                                        </div>
+                                    </div>
+                                    <div class="exercise-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Form Quality</span>
+                                            <span class="stat-value" id="form-quality">0%</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Calories</span>
+                                            <span class="stat-value" id="calories-burned">0</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Time</span>
+                                            <span class="stat-value" id="exercise-time">00:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-feedback" id="form-feedback">
+                                    <h4>Form Feedback</h4>
+                                    <ul id="feedback-list">
+                                        <li>Start the exercise to receive feedback</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Snapshots Tab -->
+                    <div id="snapshots" class="tab-pane">
+                        <div class="snapshots-container">
+                            <div class="snapshots-header">
+                                <h3>Captured Snapshots</h3>
+                                <button id="capture-new" class="primary-btn">
+                                    <i class="fas fa-camera"></i> New Snapshot
+                                </button>
+                            </div>
+                            <div class="snapshots-grid" id="snapshots-grid">
+                                <div class="empty-state">
+                                    <i class="fas fa-camera"></i>
+                                    <p>No snapshots captured yet</p>
+                                    <p>Take a snapshot to analyze your pose</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> Pose Analyzer Help</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>Getting Started</h3>
+                    <p>The Pose Analyzer uses AI to detect and analyze human poses in real-time. Here's how to use it:</p>
+                    <ol>
+                        <li>Allow camera access when prompted</li>
+                        <li>Stand in front of your camera where your full body is visible</li>
+                        <li>The AI will automatically detect your pose and display keypoints</li>
+                        <li>View real-time analysis in the right panel</li>
+                    </ol>
+                </div>
+                
+                <div class="help-section">
+                    <h3>Features</h3>
+                    <ul>
+                        <li><strong>Pose Detection:</strong> Identifies key body points and their positions</li>
+                        <li><strong>Posture Analysis:</strong> Evaluates alignment and posture quality</li>
+                        <li><strong>Exercise Tracking:</strong> Counts repetitions and analyzes form for common exercises</li>
+                        <li><strong>Analytics:</strong> Provides insights on movement patterns and stability</li>
+                        <li><strong>Snapshots:</strong> Captures and saves pose data for later review</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>Models</h3>
+                    <ul>
+                        <li><strong>MoveNet:</strong> Fast and efficient, best for real-time applications</li>
+                        <li><strong>PoseNet:</strong> More accurate but slightly slower</li>
+                        <li><strong>BlazePose:</strong> Full body detection with high accuracy</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h3>Privacy</h3>
+                    <p>All processing happens directly in your browser. No video data is sent to any server or stored online.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="primary-btn close-modal">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cog"></i> Settings</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Display Options</h3>
+                    <div class="setting-item">
+                        <label for="show-skeleton">Show Skeleton</label>
+                        <label class="switch">
+                            <input type="checkbox" id="show-skeleton" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="show-keypoints">Show Keypoints</label>
+                        <label class="switch">
+                            <input type="checkbox" id="show-keypoints" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="show-labels">Show Labels</label>
+                        <label class="switch">
+                            <input type="checkbox" id="show-labels">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="mirror-view">Mirror View</label>
+                        <label class="switch">
+                            <input type="checkbox" id="mirror-view" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Advanced Settings</h3>
+                    <div class="setting-item">
+                        <label for="max-poses">Maximum Poses</label>
+                        <select id="max-poses">
+                            <option value="1">1 person</option>
+                            <option value="2">2 people</option>
+                            <option value="5">5 people</option>
+                            <option value="10">10 people</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="skeleton-color">Skeleton Color</label>
+                        <input type="color" id="skeleton-color" value="#4a6cf7">
+                    </div>
+                    <div class="setting-item">
+                        <label for="keypoint-color">Keypoint Color</label>
+                        <input type="color" id="keypoint-color" value="#ff4757">
+                    </div>
+                    <div class="setting-item">
+                        <label for="camera-resolution">Camera Resolution</label>
+                        <select id="camera-resolution">
+                            <option value="640x480">640x480 (Standard)</option>
+                            <option value="1280x720">1280x720 (HD)</option>
+                            <option value="1920x1080">1920x1080 (Full HD)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal">Cancel</button>
+                <button id="save-settings" class="primary-btn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-upload"></i> Upload Video</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area">
+                    <div class="upload-dropzone" id="upload-dropzone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag and drop your video file here</p>
+                        <p>or</p>
+                        <label for="video-upload" class="upload-btn">Browse Files</label>
+                        <input type="file" id="video-upload" accept="video/*" hidden>
+                    </div>
+                    <div class="upload-preview hidden" id="upload-preview">
+                        <video id="preview-video" controls></video>
+                        <div class="preview-info">
+                            <p id="file-name">filename.mp4</p>
+                            <p id="file-size">0 MB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal">Cancel</button>
+                <button id="process-upload" class="primary-btn" disabled>Process Video</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- URL Modal -->
+    <div id="url-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-link"></i> Video URL</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="url-input-container">
+                    <label for="video-url">Enter video URL:</label>
+                    <input type="url" id="video-url" placeholder="https://example.com/video.mp4">
+                    <p class="url-note">Note: The video must be directly accessible (no YouTube links)</p>
+                </div>
+                <div class="url-preview hidden" id="url-preview">
+                    <video id="url-preview-video" controls></video>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal">Cancel</button>
+                <button id="process-url" class="primary-btn">Load Video</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="navigation.js"></script>
+    <script src="pose-analyzer.js"></script>
+</body>
+</html>
+

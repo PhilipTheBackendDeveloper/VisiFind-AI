@@ -1,50 +1,51 @@
-/**
- * Navigation functionality for mobile menu
- * Handles menu toggling and responsive behavior
- */
-import $ from "jquery"
+// Navigation.js - Handles navigation and user menu functionality
+document.addEventListener("DOMContentLoaded", () => {
+  // User menu dropdown toggle
+  const userMenuBtn = document.getElementById("userMenuBtn")
+  const userDropdown = document.getElementById("userDropdown")
 
-$(document).ready(() => {
-  // Mobile menu functionality
-  $("#nav-menu").mmenu(
-    {
-      // Options
-      extensions: ["effect-menu-slide", "pagedim-black"],
-      navbar: {
-        title: "Menu",
-      },
-      navbars: [
-        {
-          position: "top",
-          content: ["prev", "title"],
-        },
-      ],
-    },
-    {
-      // Configuration
-      classNames: {
-        fixedElements: {
-          fixed: "fixed",
-        },
-      },
-    },
-  )
+  if (userMenuBtn && userDropdown) {
+    userMenuBtn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      userDropdown.classList.toggle("active")
+    })
 
-  // Handle mobile menu toggle
-  $(".cst-humburger-icon a").click(() => {
-    $("body").addClass("mobile-open")
-  })
+    // Close dropdown when clicking outside
+    document.addEventListener("click", () => {
+      userDropdown.classList.remove("active")
+    })
 
-  $(".mobile-close-icon").click(() => {
-    $("body").removeClass("mobile-open")
-  })
+    // Prevent dropdown from closing when clicking inside it
+    userDropdown.addEventListener("click", (e) => {
+      e.stopPropagation()
+    })
+  }
 
-  // Sticky header
-  $(window).scroll(function () {
-    if ($(this).scrollTop() > 50) {
-      $(".header").addClass("fixed")
+  // Logout functionality
+  const logoutBtn = document.getElementById("logoutBtn")
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault()
+
+      // Clear any user session data
+      localStorage.removeItem("user")
+      localStorage.removeItem("token")
+
+      // Redirect to login page
+      window.location.href = "login.html"
+    })
+  }
+
+  // Active navigation highlighting
+  const currentPage = window.location.pathname.split("/").pop()
+  const navLinks = document.querySelectorAll("nav a")
+
+  navLinks.forEach((link) => {
+    const linkPage = link.getAttribute("href")
+    if (linkPage === currentPage) {
+      link.classList.add("active")
     } else {
-      $(".header").removeClass("fixed")
+      link.classList.remove("active")
     }
   })
 })
