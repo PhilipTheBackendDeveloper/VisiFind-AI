@@ -589,12 +589,14 @@ ul {
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  border-radius: 24px;
 }
 
 .welcome-image img {
   max-width: 100%;
   height: auto;
   max-height: 240px;
+  border-radius: 24px;
 }
 
 /* Quick stats */
