@@ -18,13 +18,17 @@
    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0"></script>
    <!-- MobileNet model for image classification -->
    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0"></script>
+   <!-- COCO-SSD model for object detection -->
+   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+   <!-- KNN Classifier -->
+   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
 </head>
 <body>
    <div class="app-container">
        <!-- Sidebar -->
        <aside class="sidebar">
            <div class="sidebar-header">
-               <img src="https://www.clarifai.com/hubfs/clarifai-logo-new.svg" alt="Logo" class="logo">
+               <img src="logo-visifind.png" alt="Logo" class="logo">
                <button class="menu-toggle" id="menuToggle">
                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                </button>
@@ -89,9 +93,9 @@
            </nav>
            <div class="sidebar-footer">
                <div class="user-info">
-                   <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="user-avatar">
+                   <img src="profile-john.jpeg" alt="User" class="user-avatar">
                    <div class="user-details">
-                       <h4>John Doe</h4>
+                       <h4>John Asare</h4>
                        <p>Administrator</p>
                    </div>
                </div>
@@ -378,7 +382,7 @@
                <div class="help-note">
                    <p><strong>Note:</strong> This feature uses TensorFlow.js for image analysis and the Pexels API for finding similar images. All image processing happens in your browser for privacy.</p>
                </div>
-           </div>
+             </div>
        </div>
    </div>
 
@@ -394,7 +398,7 @@
            <div class="modal-body">
                <div class="image-modal-content">
                    <div class="image-modal-preview">
-                       <img id="modalImage" src="/placeholder.svg" alt="Image Preview">
+                       <img id="modalImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%23999'%3EImage Preview%3C/text%3E%3C/svg%3E" alt="Image Preview">
                    </div>
                    <div class="image-modal-info">
                        <h3 id="modalImageTitle">Image Title</h3>
@@ -425,7 +429,44 @@
        </div>
    </div>
 
-   <script src="visual-search.js"></script>
+   <!-- Create placeholder.svg inline -->
+   <script>
+   // Create a function to generate SVG placeholders
+   function generatePlaceholder(width, height) {
+       return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${width}' height='${height}' viewBox='0 0 ${width} ${height}'%3E%3Crect width='${width}' height='${height}' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%23999'%3E${width} × ${height}%3C/text%3E%3C/svg%3E`;
+   }
+
+   // Override fetch for placeholder.svg requests
+   const originalFetch = window.fetch;
+   window.fetch = function(url, options) {
+       if (typeof url === 'string' && url.includes('placeholder.svg')) {
+           // Extract width and height from URL parameters
+           const urlObj = new URL(url, window.location.href);
+           const width = urlObj.searchParams.get('width') || 200;
+           const height = urlObj.searchParams.get('height') || 150;
+           
+           // Return a resolved promise with the SVG data
+           return Promise.resolve({
+               ok: true,
+               status: 200,
+               statusText: 'OK',
+               headers: new Headers({'Content-Type': 'image/svg+xml'}),
+               text: () => Promise.resolve(generatePlaceholder(width, height)),
+               blob: () => {
+                   const svgString = generatePlaceholder(width, height);
+                   const blob = new Blob([svgString], {type: 'image/svg+xml'});
+                   return Promise.resolve(blob);
+               }
+           });
+       }
+       
+       // Otherwise, use the original fetch
+       return originalFetch.apply(this, arguments);
+   };
+   </script>
+
+   <!-- Main JavaScript - now as a module -->
+   <script type="module" src="visual-search.js"></script>
 </body>
 </html>
 
