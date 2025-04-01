@@ -113,15 +113,18 @@ a:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 60px 40px;
+  padding: 5px 5px;
 }
 
 .brand-logo {
   margin-bottom: 40px;
+
 }
 
 .brand-logo img {
   height: 32px;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Typewriter section */
