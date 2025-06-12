@@ -1,6 +1,13 @@
 :root {
   /* Colors */
-  
+  --primary: #04afff;
+  --primary-dark: #0396db;
+  --secondary: #7b61ff;
+  --secondary-dark: #6a52e5;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
 
   /* Text colors */
   --text-primary: #1e293b;
