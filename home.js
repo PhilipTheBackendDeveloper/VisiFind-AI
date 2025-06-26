@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
+
+
   // Mobile menu toggle
   const mobileMenuBtn = document.getElementById("mobileMenuBtn")
   const closeMenuBtn = document.getElementById("closeMenuBtn")
