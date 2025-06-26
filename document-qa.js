@@ -89,6 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
+
+
+  
   // Clear document and reset UI
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
